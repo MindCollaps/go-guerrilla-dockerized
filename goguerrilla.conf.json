@@ -1,0 +1,70 @@
+{
+    "allowed_hosts": ["*.neoin.space", "*.weebskingdom.com"], // What hosts to accept. Supports wildcards *.
+    "pid_file" : "/var/run/go-guerrilla.pid", // pid = process id, so that other programs can send signals to our server
+    "log_file" : "stderr", // can be "off", "stderr", "stdout" or any path to a file
+    "log_level" : "info", // can be  "debug", "info", "error", "warn", "fatal", "panic"
+    "backend_config" :
+        {
+            "log_received_mails": true,
+            "save_workers_size": 1,
+            "save_process" : "HeadersParser|Header|Debugger", // chain of processors to be executed when saving email
+            "validate_process": "", // similar to save_process, chain of processors that validate a recipient
+            "primary_mail_host" : "mail.neoin.space", // used by the Header processor. 
+            "gw_save_timeout" : "30s", // how long before giving up on saving an email (optional, default 30s)
+            "gw_val_rcpt_timeout" : "3s" // how long before giving up in validating a recipient (optional, default 5s)
+        },
+    "servers" : [ // the following is an array of objects, each object represents a new server that will be spawned
+        // the following is a second server, but listening on port 465 and always using TLS
+        {
+            "is_enabled" : true,
+            "host_name":"mail.neoin.space",
+            "max_size":1000000,
+            
+            "timeout":180,
+            "listen_interface":"127.0.0.1:465",
+            
+            "max_clients":500,
+            "tls" : {
+                "start_tls_on":false,
+                "tls_always_on":true,
+                "private_key_file":"/config/neoin.space.key",
+                "public_key_file":"/config/neoin.space.crt",
+                "protocols" : ["tls1.2", "tls1.3"],
+                "ciphers" : ["TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", 
+                    "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305", "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305", 
+                    "TLS_RSA_WITH_RC4_128_SHA", "TLS_RSA_WITH_AES_128_GCM_SHA256", 
+                    "TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA", 
+                    "TLS_ECDHE_RSA_WITH_RC4_128_SHA", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", 
+                    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"],
+                "curves" : ["P256", "P384", "P521", "X25519"],
+                "prefer_server_cipher_suites" : true
+            }
+        },
+        {
+            "is_enabled" : true,
+            "host_name":"mail.weebskingdom.com",
+            "max_size":1000000,
+            
+            "timeout":180,
+            "listen_interface":"127.0.0.1:466",
+            
+            "max_clients":500,
+            "tls" : {
+                "start_tls_on":false,
+                "tls_always_on":true,
+                "private_key_file":"/config/weebskingdom.com.key",
+                "public_key_file":"/config/weebskingdom.com.crt",
+                "protocols" : ["tls1.2", "tls1.3"],
+                "ciphers" : ["TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", 
+                    "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305", "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305", 
+                    "TLS_RSA_WITH_RC4_128_SHA", "TLS_RSA_WITH_AES_128_GCM_SHA256", 
+                    "TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA", 
+                    "TLS_ECDHE_RSA_WITH_RC4_128_SHA", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", 
+                    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"],
+                "curves" : ["P256", "P384", "P521", "X25519"],
+                "prefer_server_cipher_suites" : true
+            }
+        }
+        // repeat as many servers as you need
+    ]
+}
