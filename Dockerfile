@@ -2,9 +2,10 @@ FROM golang AS builder
 WORKDIR /source
 RUN curl https://glide.sh/get | sh
 RUN apt-get update && apt-get install -y git
-RUN go install github.com/phires/go-guerrilla
-RUN cd /go/src/github.com/phires/go-guerrilla && glide install && make guerrillad
-RUN mkdir /app && cp /go/src/github.com/phires/go-guerrilla/guerrillad /app
+RUN git clone https://github.com/phires/go-guerrilla
+WORKDIR ./go-guerrilla
+RUN make guerrillad
+RUN mkdir /app && cp guerrillad /app
 
 # Use an official lightweight Alpine base image
 FROM alpine AS SSL
