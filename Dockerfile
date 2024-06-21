@@ -2,7 +2,7 @@ FROM golang AS builder
 WORKDIR /source
 RUN curl https://glide.sh/get | sh
 RUN apt-get update && apt-get install -y git
-RUN go get github.com/phires/go-guerrilla
+RUN go install github.com/phires/go-guerrilla
 RUN cd /go/src/github.com/phires/go-guerrilla && glide install && make guerrillad
 RUN mkdir /app && cp /go/src/github.com/phires/go-guerrilla/guerrillad /app
 
