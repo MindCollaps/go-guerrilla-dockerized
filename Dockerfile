@@ -42,7 +42,7 @@ RUN mkdir /config
 
 VOLUME /config
 
-COPY --from=SSL /ssl/* .
+COPY --from=SSL /ssl/* /config
 COPY goguerrilla.conf.json /config/goguerrilla.conf.json
 
 CMD ["/app/guerrillad", "serve", "-c", "/config/goguerrilla.conf.json"]
